@@ -7,9 +7,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
+
+        List<Shape> lst = loadShapeFromFile();
+        List<Shape> lst2 = lst.stream().map(Shape::taoBanSao).toList();
+
+        increaseShape(lst2);
+
+        printShape("Danh sach lst:", lst);
+        printShape("Danh sach lst2:", lst2);
+    }
+
+    private static void increaseShape(List<Shape> lst2) {
+        for (Shape shape : lst2) {
+            if (shape instanceof HinhTron) {
+                ((HinhTron) shape).tangBanKinh(1.0);
+            } else if (shape instanceof HinhChuNhat) {
+                ((HinhChuNhat) shape).tangChieuDai(2.0);
+                ((HinhChuNhat) shape).tangChieuRong(2.0);
+            }
+        }
+    }
+
+    private static List<Shape> loadShapeFromFile() {
         List<Shape> lst = new ArrayList<>();
-        List<Shape> lst2 = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("hinh.txt"))) {
             String line;
@@ -28,33 +50,13 @@ public class Main {
             e.printStackTrace();
         }
 
-        for (Shape shape : lst) {
-            lst2.add(shape.taoBanSao());
-        }
+        return lst;
+    }
 
-        for (Shape shape : lst2) {
-            if (shape instanceof HinhTron) {
-                ((HinhTron) shape).tangBanKinh(1.0);
-            } else if (shape instanceof HinhChuNhat) {
-                ((HinhChuNhat) shape).tangChieuDai(2.0);
-                ((HinhChuNhat) shape).tangChieuRong(2.0);
-            }
-        }
-        //In danh sách lst1
-        System.out.println("Danh sach lst:");
+    private static void printShape(String msg, List<Shape> list) {
         int stt = 1;
-        for (Shape shape : lst) {
-            String acreage = String.format("%.1f", shape.getDienTich());
-            System.out.println("STT " + stt++);
-            System.out.println("Thong tin: " + shape.getThongTin());
-            System.out.println("Dien tich: " + acreage);
-            System.out.println();
-        }
-
-        // In danh sách lst2
-        System.out.println("Danh sach lst2:");
-        stt = 1;
-        for (Shape shape : lst2) {
+        System.out.println(msg);
+        for (Shape shape : list) {
             String acreage = String.format("%.1f", shape.getDienTich());
             System.out.println("STT " + stt++);
             System.out.println("Thong tin: " + shape.getThongTin());
